@@ -7,7 +7,8 @@ var MESSAGES = [
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра.В конце концов это просто непрофессионально.',
   'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
-  'Лица у людей на фотке перекошены, как будто их избивают.Как можно было поймать такой неудачный момент ? !'];
+  'Лица у людей на фотке перекошены, как будто их избивают.Как можно было поймать такой неудачный момент ? !'
+];
 var PHOTOS_COUNT = 25;
 var MIN_COUNT_LIKES = 15;
 var MAX_COUNT_LIKES = 200;
@@ -21,106 +22,100 @@ var MAX_COUNT_MESSAGES = 3;
 var pictureTemplate = document.querySelector('#picture').content.querySelector('a');
 var picturesList = document.querySelector('.pictures');
 
-var photos = [];
-
-function getRandomElementOfArray(array) {
+function getRandomArrayItem(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
-function getRandomElementOfRange(min, max) {
+
+function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-function createRandomMessagesArray() {
-  var messages = [];
-  var randomCountMessages = getRandomElementOfRange(MIN_COUNT_MESSAGES, MAX_COUNT_MESSAGES);
 
-  for (var k = 0; k < randomCountMessages; k++) {
-    var message = getRandomElementOfArray(MESSAGES);
+function createRandomMessages() {
+  var messages = [];
+  var randomCountMessages = getRandomNumber(MIN_COUNT_MESSAGES, MAX_COUNT_MESSAGES);
+
+  for (var i = 0; i < randomCountMessages; i++) {
+    var message = getRandomArrayItem(MESSAGES);
     messages.push(message);
   }
 
   return messages;
 }
 
+
 function createComment() {
   var comment = {};
-  var currentSrc = 'img/avatar-'
-                 + getRandomElementOfRange(MIN_COUNT_AVATAR, MAX_COUNT_AVATAR)
-                 + '.svg';
-  var currentMessage = createRandomMessagesArray().join(' ');
-  var currentName = getRandomElementOfArray(NAMES);
 
-  comment.avatar = currentSrc;
-  comment.message = currentMessage;
-  comment.name = currentName;
+  comment.avatar = 'img/avatar-' + getRandomNumber(MIN_COUNT_AVATAR, MAX_COUNT_AVATAR) + '.svg';
+  comment.message = createRandomMessages().join(' ');
+  comment.name = getRandomArrayItem(NAMES);
 
   return comment;
 }
 
-function createRandomCommentsArray() {
-  var comments = [];
 
-  for (var o = 0; o < getRandomElementOfRange(MIN_COUNT_COMMENTS, MAX_COUNT_COMMENTS); o++) {
+function createRandomComments() {
+  var comments = [];
+  var randomNumber = getRandomNumber(MIN_COUNT_COMMENTS, MAX_COUNT_COMMENTS);
+
+  for (var k = 0; k < randomNumber; k++) {
     comments.push(createComment());
   }
 
   return comments;
 }
 
-function createRandomNumbersArray() {
-  var randomNumbers = [];
-  var currentNumber = 0;
-  randomNumbers[0] = getRandomElementOfRange(1, PHOTOS_COUNT);
 
-  do {
-    currentNumber = getRandomElementOfRange(1, PHOTOS_COUNT);
-
-    randomNumbers.push(currentNumber);
-
-    for (var i = 0; i < randomNumbers.length - 1; i++) {
-      if (currentNumber === randomNumbers[i]) {
-        randomNumbers.pop();
-      }
-    }
-
+function createNumbers() {
+  var numbers = [];
+  for (var a = 1; a <= PHOTOS_COUNT; a++) {
+    numbers.push(a);
   }
-  while (randomNumbers.length < PHOTOS_COUNT);
+
+  return numbers;
+}
+
+
+function createRandomNumbers() {
+  var randomNumbers = [];
+  var numbers = createNumbers();
+
+  while (numbers.length > 0) {
+    var randomNumber = numbers.splice(getRandomNumber(0, numbers.length - 1), 1)[0];
+    randomNumbers.push(randomNumber);
+  }
 
   return randomNumbers;
 }
 
-function createRandomUrlsArray() {
-  var randomNumbersArray = createRandomNumbersArray();
+
+function createRandomUrls() {
+  var randomNumbers = createRandomNumbers();
   var urls = [];
 
-  randomNumbersArray.forEach(function (item) {
+  randomNumbers.forEach(function (item) {
     urls.push('photos/' + item + '.jpg');
   });
 
   return urls;
 }
 
-var urls = createRandomUrlsArray();
 
-function createPhotoDescription(a) {
+function createPhoto(a) {
   var photoDescription = {};
-  var randomCountLikes = getRandomElementOfRange(MIN_COUNT_LIKES, MAX_COUNT_LIKES);
-  var currentUrl = urls[a];
 
-  photoDescription.url = currentUrl;
+  photoDescription.url = urls[a];
   photoDescription.description = 'Описание фотографии';
-  photoDescription.likes = randomCountLikes;
-  photoDescription.comments = createRandomCommentsArray();
+  photoDescription.likes = getRandomNumber(MIN_COUNT_LIKES, MAX_COUNT_LIKES);
+  photoDescription.comments = createRandomComments();
 
   return photoDescription;
 }
 
-for (var a = 0; a < PHOTOS_COUNT; a++) {
-  photos.push(createPhotoDescription(a));
-}
 
-function renderPhoto(photo) {
+function createPhotoElement(photo) {
   var photoElement = pictureTemplate.cloneNode(true);
   var image = photoElement.querySelector('.picture__img');
   var likes = photoElement.querySelector('.picture__likes');
@@ -133,9 +128,19 @@ function renderPhoto(photo) {
   return photoElement;
 }
 
-var fragment = document.createDocumentFragment();
 
-for (var i = 0; i < photos.length; i++) {
-  fragment.appendChild(renderPhoto(photos[i]));
+function renderPhotos() {
+  var fragment = document.createDocumentFragment();
+
+  for (var o = 0; o < PHOTOS_COUNT; o++) {
+    var photo = createPhoto(o);
+    fragment.appendChild(createPhotoElement(photo));
+  }
+  picturesList.appendChild(fragment);
+
+  return fragment;
 }
-picturesList.appendChild(fragment);
+
+
+var urls = createRandomUrls();
+renderPhotos();
