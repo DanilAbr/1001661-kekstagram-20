@@ -21,16 +21,18 @@ var MAX_COUNT_MESSAGES = 3;
 
 var pictureTemplate = document.querySelector('#picture').content.querySelector('a');
 var picturesList = document.querySelector('.pictures');
+var bigPicture = document.querySelector('.big-picture');
+
+var urls = createRandomUrls();
+var photos = createPhotos();
 
 function getRandomArrayItem(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
-
 function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
-
 
 function createRandomMessages() {
   var messages = [];
@@ -44,7 +46,6 @@ function createRandomMessages() {
   return messages;
 }
 
-
 function createComment() {
   var comment = {};
 
@@ -54,7 +55,6 @@ function createComment() {
 
   return comment;
 }
-
 
 function createRandomComments() {
   var comments = [];
@@ -67,7 +67,6 @@ function createRandomComments() {
   return comments;
 }
 
-
 function createNumbers() {
   var numbers = [];
   for (var a = 1; a <= PHOTOS_COUNT; a++) {
@@ -76,7 +75,6 @@ function createNumbers() {
 
   return numbers;
 }
-
 
 function createRandomNumbers() {
   var randomNumbers = [];
@@ -90,30 +88,27 @@ function createRandomNumbers() {
   return randomNumbers;
 }
 
-
 function createRandomUrls() {
   var randomNumbers = createRandomNumbers();
-  var urls = [];
+  var randomUrls = [];
 
   randomNumbers.forEach(function (item) {
-    urls.push('photos/' + item + '.jpg');
+    randomUrls.push('photos/' + item + '.jpg');
   });
 
-  return urls;
+  return randomUrls;
 }
-
 
 function createPhoto(a) {
   var photoDescription = {};
 
   photoDescription.url = urls[a];
-  photoDescription.description = 'Описание фотографии';
+  photoDescription.description = 'Описание этой фотографии';
   photoDescription.likes = getRandomNumber(MIN_COUNT_LIKES, MAX_COUNT_LIKES);
   photoDescription.comments = createRandomComments();
 
   return photoDescription;
 }
-
 
 function createPhotoElement(photo) {
   var photoElement = pictureTemplate.cloneNode(true);
@@ -128,19 +123,75 @@ function createPhotoElement(photo) {
   return photoElement;
 }
 
-
-function renderPhotos() {
-  var fragment = document.createDocumentFragment();
-
-  for (var o = 0; o < PHOTOS_COUNT; o++) {
-    var photo = createPhoto(o);
-    fragment.appendChild(createPhotoElement(photo));
+function createPhotos() {
+  var photos = [];
+  for (var a = 0; a < PHOTOS_COUNT; a++) {
+    photos.push(createPhoto(a));
   }
-  picturesList.appendChild(fragment);
-
-  return fragment;
+  return photos;
 }
 
+var photoFragment = document.createDocumentFragment();
 
-var urls = createRandomUrls();
-renderPhotos();
+photos.forEach(function (item) {
+  photoFragment.appendChild(createPhotoElement(item));
+});
+picturesList.appendChild(photoFragment);
+
+var currentPhoto = photos[0];
+var currentPhotoComments = currentPhoto.comments;
+
+function createBigPhoto() {
+  var bigPictureImg = bigPicture.querySelector('img');
+  var likesCount = bigPicture.querySelector('.likes-count');
+  var commentsCount = bigPicture.querySelector('.comments-count');
+  var socialCaption = bigPicture.querySelector('.social__caption');
+
+  bigPictureImg.src = currentPhoto.url;
+  likesCount.textContent = currentPhoto.likes;
+  commentsCount.textContent = currentPhoto.comments.length;
+  socialCaption.textContent = currentPhoto.description;
+}
+
+function createElement(tagName, className, text) {
+  var element = document.createElement(tagName);
+  element.classList.add(className);
+  if (text) {
+    element.textContent = text;
+  }
+  return element;
+}
+
+function createCommentElement(comment) {
+  var commentItem = createElement('li', 'social__comment');
+  var img = createElement('img', 'social__picture');
+  img.src = comment.avatar;
+  img.alt = comment.name;
+  commentItem.appendChild(img);
+
+  var commentText = createElement('p', 'social__text', comment.message);
+  commentItem.appendChild(commentText);
+
+  return commentItem;
+}
+
+var socialComments = bigPicture.querySelector('.social__comments');
+var commentFragment = document.createDocumentFragment();
+
+currentPhotoComments.forEach(function (item) {
+  commentFragment.appendChild(createCommentElement(item));
+});
+socialComments.appendChild(commentFragment);
+
+var socialCommentCount = bigPicture.querySelector('.social__comment-count');
+var commentsLoader = bigPicture.querySelector('.comments-loader');
+
+createBigPhoto();
+
+bigPicture.classList.remove('hidden');
+
+socialCommentCount.classList.add('hidden');
+commentsLoader.classList.add('hidden');
+
+document.body.classList.add('modal__open');
+
