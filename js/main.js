@@ -24,7 +24,6 @@ var picturesList = document.querySelector('.pictures');
 var bigPicture = document.querySelector('.big-picture');
 
 var urls = createRandomUrls();
-var photos = createPhotos();
 
 function getRandomArrayItem(array) {
   return array[Math.floor(Math.random() * array.length)];
@@ -36,9 +35,9 @@ function getRandomNumber(min, max) {
 
 function createRandomMessages() {
   var messages = [];
-  var randomCountMessages = getRandomNumber(MIN_COUNT_MESSAGES, MAX_COUNT_MESSAGES);
+  var randomMessagesCount = getRandomNumber(MIN_COUNT_MESSAGES, MAX_COUNT_MESSAGES);
 
-  for (var i = 0; i < randomCountMessages; i++) {
+  for (var i = 0; i < randomMessagesCount; i++) {
     var message = getRandomArrayItem(MESSAGES);
     messages.push(message);
   }
@@ -47,13 +46,11 @@ function createRandomMessages() {
 }
 
 function createComment() {
-  var comment = {};
-
-  comment.avatar = 'img/avatar-' + getRandomNumber(MIN_COUNT_AVATAR, MAX_COUNT_AVATAR) + '.svg';
-  comment.message = createRandomMessages().join(' ');
-  comment.name = getRandomArrayItem(NAMES);
-
-  return comment;
+  return {
+    avatar: 'img/avatar-' + getRandomNumber(MIN_COUNT_AVATAR, MAX_COUNT_AVATAR) + '.svg',
+    message: createRandomMessages().join(' '),
+    name: getRandomArrayItem(NAMES),
+  };
 }
 
 function createRandomComments() {
@@ -72,7 +69,6 @@ function createNumbers() {
   for (var a = 1; a <= PHOTOS_COUNT; a++) {
     numbers.push(a);
   }
-
   return numbers;
 }
 
@@ -89,25 +85,19 @@ function createRandomNumbers() {
 }
 
 function createRandomUrls() {
-  var randomNumbers = createRandomNumbers();
-  var randomUrls = [];
-
-  randomNumbers.forEach(function (item) {
-    randomUrls.push('photos/' + item + '.jpg');
-  });
-
-  return randomUrls;
+  return createRandomNumbers()
+    .map(function (item) {
+      return 'photos/' + item + '.jpg';
+    });
 }
 
 function createPhoto(a) {
-  var photoDescription = {};
-
-  photoDescription.url = urls[a];
-  photoDescription.description = 'Описание этой фотографии';
-  photoDescription.likes = getRandomNumber(MIN_COUNT_LIKES, MAX_COUNT_LIKES);
-  photoDescription.comments = createRandomComments();
-
-  return photoDescription;
+  return {
+    url: urls[a],
+    description: 'Описание этой фотографии',
+    likes: getRandomNumber(MIN_COUNT_LIKES, MAX_COUNT_LIKES),
+    comments: createRandomComments(),
+  };
 }
 
 function createPhotoElement(photo) {
@@ -123,25 +113,7 @@ function createPhotoElement(photo) {
   return photoElement;
 }
 
-function createPhotos() {
-  var photosArray = [];
-  for (var a = 0; a < PHOTOS_COUNT; a++) {
-    photos.push(createPhoto(a));
-  }
-  return photosArray;
-}
-
-var photoFragment = document.createDocumentFragment();
-
-photos.forEach(function (item) {
-  photoFragment.appendChild(createPhotoElement(item));
-});
-picturesList.appendChild(photoFragment);
-
-var currentPhoto = photos[0];
-var currentPhotoComments = currentPhoto.comments;
-
-function createBigPhoto() {
+function fillBigPhotoElement() {
   var bigPictureImg = bigPicture.querySelector('img');
   var likesCount = bigPicture.querySelector('.likes-count');
   var commentsCount = bigPicture.querySelector('.comments-count');
@@ -175,6 +147,20 @@ function createCommentElement(comment) {
   return commentItem;
 }
 
+var photoFragment = document.createDocumentFragment();
+var photos = [];
+
+for (var a = 0; a < PHOTOS_COUNT; a++) {
+  var photo = createPhoto(a);
+  photos.push(photo);
+  photoFragment.appendChild(createPhotoElement(photo));
+}
+
+picturesList.appendChild(photoFragment);
+
+var currentPhoto = photos[0];
+var currentPhotoComments = currentPhoto.comments;
+
 var socialComments = bigPicture.querySelector('.social__comments');
 var commentFragment = document.createDocumentFragment();
 
@@ -186,12 +172,10 @@ socialComments.appendChild(commentFragment);
 var socialCommentCount = bigPicture.querySelector('.social__comment-count');
 var commentsLoader = bigPicture.querySelector('.comments-loader');
 
-createBigPhoto();
-
+fillBigPhotoElement();
 bigPicture.classList.remove('hidden');
 
 socialCommentCount.classList.add('hidden');
 commentsLoader.classList.add('hidden');
 
 document.body.classList.add('modal__open');
-
