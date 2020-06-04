@@ -124,11 +124,11 @@ function createPhotoElement(photo) {
 }
 
 function createPhotos() {
-  var photos = [];
+  var photosArray = [];
   for (var a = 0; a < PHOTOS_COUNT; a++) {
     photos.push(createPhoto(a));
   }
-  return photos;
+  return photosArray;
 }
 
 var photoFragment = document.createDocumentFragment();
