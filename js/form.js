@@ -41,4 +41,5 @@
   //   var currentPosition = +getComputedStyle(evt.target)['left'].slice(0, -2);
   //   var maxWidth = effectLevelLine.offsetWidth;
   //   var filterLevel = currentPosition / maxWidth;
+
 })();
