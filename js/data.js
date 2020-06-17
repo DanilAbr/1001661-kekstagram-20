@@ -13,7 +13,7 @@
   var PHOTOS_COUNT = 25;
   var MIN_COUNT_LIKES = 15;
   var MAX_COUNT_LIKES = 200;
-  var MIN_COUNT_COMMENTS = 1;
+  var MIN_COUNT_COMMENTS = 0;
   var MAX_COUNT_COMMENTS = 100;
   var MIN_COUNT_AVATAR = 1;
   var MAX_COUNT_AVATAR = 6;
@@ -72,8 +72,7 @@
   var photos = [];
 
   for (var a = 0; a < PHOTOS_COUNT; a++) {
-    var photo = getPhoto(a);
-    photos.push(photo);
+    photos.push(getPhoto(a));
   }
 
   window.data = {
