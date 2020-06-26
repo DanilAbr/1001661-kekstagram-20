@@ -30,16 +30,4 @@
   inputUpload.addEventListener('change', function () {
     onInputUploadChange();
   });
-
-  // var pinEffect = modal.querySelector('.effect-level__pin');
-  // var effectLevelLine = modal.querySelector('.effect-level__line');
-  // var slider = modal.querySelector('.img-upload__effect-level');
-
-  // slider.classList.add('hidden');
-
-  // pinEffect.addEventListener('click', function (evt) {
-  //   var currentPosition = +getComputedStyle(evt.target)['left'].slice(0, -2);
-  //   var maxWidth = effectLevelLine.offsetWidth;
-  //   var filterLevel = currentPosition / maxWidth;
-
 })();
