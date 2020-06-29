@@ -30,6 +30,12 @@
     return array[Math.floor(Math.random() * array.length)];
   }
 
+  function clearContainer(container) {
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
+  }
+
   function createElement(tagName, className, text) {
     var element = document.createElement(tagName);
     element.classList.add(className);
@@ -55,5 +61,6 @@
     getRandomNumber: getRandomNumber,
     getRandomArrayItem: getRandomArrayItem,
     createNumbersArray: createNumbersArray,
+    clearContainer: clearContainer,
   };
 })();

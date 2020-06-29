@@ -1,5 +1,5 @@
 'use strict';
 
 (function () {
-  window.gallery.renderGallery();
+  window.data.loadData(window.gallery.renderGallery);
 })();

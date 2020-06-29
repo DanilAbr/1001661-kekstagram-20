@@ -1,24 +1,30 @@
 'use strict';
 
 (function () {
+  var Effect = {
+    CHROME: 'effects__preview--chrome',
+    SEPIA: 'effects__preview--sepia',
+    MARVIN: 'effects__preview--marvin',
+    PHOBOS: 'effects__preview--phobos',
+    HEAT: 'effects__preview--heat',
+  };
+
   var modal = document.querySelector('.img-upload__overlay');
   var pin = modal.querySelector('.effect-level__pin');
   var bar = modal.querySelector('.effect-level__line');
   var slider = modal.querySelector('.img-upload__effect-level');
   var effectLine = modal.querySelector('.effect-level__depth');
-
   var imageUploadPreview = modal.querySelector('.img-upload__preview img');
-  var effects = modal.querySelectorAll('input[name="effect"]');
+  var effectsButton = modal.querySelectorAll('input[name="effect"]');
 
   slider.classList.add('hidden');
 
-  function changePreviewClass(evt) {
-    var id = evt.target.id.slice(7);
-
+  function changePreviewClass(id) {
+    var formatedId = id.slice(7);
     if (imageUploadPreview.className) {
       imageUploadPreview.className = '';
     }
-    imageUploadPreview.classList.add('effects__preview--' + id);
+    imageUploadPreview.classList.add('effects__preview--' + formatedId);
   }
 
   function addOrRemoveSlider() {
@@ -29,8 +35,8 @@
     }
   }
 
-  function onPreviewEffectClick(evt) {
-    changePreviewClass(evt);
+  function onPreviewEffectClick(id) {
+    changePreviewClass(id);
     addOrRemoveSlider();
     setDefaultSliderValue();
   }
@@ -40,23 +46,48 @@
     pin.style.left = bar.offsetWidth + 'px';
 
     switch (imageUploadPreview.className) {
-      case 'effects__preview--chrome':
+      case Effect.CHROME:
         imageUploadPreview.style.filter = 'grayscale(1)';
         break;
-      case 'effects__preview--sepia':
+      case Effect.SEPIA:
         imageUploadPreview.style.filter = 'sepia(1)';
         break;
-      case 'effects__preview--marvin':
+      case Effect.MARVIN:
         imageUploadPreview.style.filter = 'invert(100%)';
         break;
-      case 'effects__preview--phobos':
+      case Effect.PHOBOS:
         imageUploadPreview.style.filter = 'blur(3px)';
         break;
-      case 'effects__preview--heat':
+      case Effect.HEAT:
         imageUploadPreview.style.filter = 'brightness(3)';
         break;
       default:
         imageUploadPreview.style.filter = 'none';
+    }
+  }
+
+  function setEffectLevel() {
+    var filterLevel = pin.offsetLeft / bar.offsetWidth;
+    var effectInput = modal.querySelector('.effect-level__value');
+
+    effectInput.value = Math.round(filterLevel * 100);
+
+    switch (imageUploadPreview.className) {
+      case Effect.CHROME:
+        imageUploadPreview.style.filter = 'grayscale(' + filterLevel + ')';
+        break;
+      case Effect.SEPIA:
+        imageUploadPreview.style.filter = 'sepia(' + filterLevel + ')';
+        break;
+      case Effect.MARVIN:
+        imageUploadPreview.style.filter = 'invert(' + filterLevel * 100 + '%)';
+        break;
+      case Effect.PHOBOS:
+        imageUploadPreview.style.filter = 'blur(' + filterLevel * 3 + 'px)';
+        break;
+      case Effect.HEAT:
+        imageUploadPreview.style.filter = 'brightness(' + filterLevel * 3 + ')';
+        break;
     }
   }
 
@@ -81,31 +112,6 @@
       setEffectLevel();
     }
 
-    function setEffectLevel() {
-      var filterLevel = pin.offsetLeft / bar.offsetWidth;
-      var effectInput = modal.querySelector('.effect-level__value');
-
-      effectInput.value = Math.round(filterLevel * 100);
-
-      switch (imageUploadPreview.className) {
-        case 'effects__preview--chrome':
-          imageUploadPreview.style.filter = 'grayscale(' + filterLevel + ')';
-          break;
-        case 'effects__preview--sepia':
-          imageUploadPreview.style.filter = 'sepia(' + filterLevel + ')';
-          break;
-        case 'effects__preview--marvin':
-          imageUploadPreview.style.filter = 'invert(' + filterLevel * 100 + '%)';
-          break;
-        case 'effects__preview--phobos':
-          imageUploadPreview.style.filter = 'blur(' + filterLevel * 3 + 'px)';
-          break;
-        case 'effects__preview--heat':
-          imageUploadPreview.style.filter = 'brightness(' + filterLevel * 3 + ')';
-          break;
-      }
-    }
-
     function onMouseUp(upEvt) {
       upEvt.preventDefault();
 
@@ -117,9 +123,9 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
-  effects.forEach(function (item) {
+  effectsButton.forEach(function (item) {
     item.addEventListener('click', function (evt) {
-      onPreviewEffectClick(evt);
+      onPreviewEffectClick(evt.target.id);
     });
   });
 })();
