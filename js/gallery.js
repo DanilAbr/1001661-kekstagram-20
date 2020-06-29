@@ -1,15 +1,14 @@
 'use strict';
 
 (function () {
-  function renderGallery() {
+  function renderGallery(photos) {
     var picturesList = document.querySelector('.pictures');
 
     window.util.renderElements(
-        window.data.photos,
+        photos,
         window.picture.createPhotoElement,
         picturesList
     );
-
     window.picture.addPictureListners();
   }
 

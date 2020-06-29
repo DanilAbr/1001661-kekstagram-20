@@ -31,6 +31,8 @@
     likesCount.textContent = bigPhoto.likes;
     commentsCount.textContent = bigPhoto.comments.length;
     socialCaption.textContent = bigPhoto.description;
+
+    window.util.clearContainer(socialComments);
     window.util.renderElements(bigPhoto.comments, createCommentElement, socialComments);
   }
 
