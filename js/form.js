@@ -121,7 +121,6 @@
     addOrRemoveEscListeners();
   }
 
-
   inputUpload.addEventListener('change', function () {
     onInputUploadChange();
   });
