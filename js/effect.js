@@ -15,9 +15,7 @@
   var slider = modal.querySelector('.img-upload__effect-level');
   var effectLine = modal.querySelector('.effect-level__depth');
   var imageUploadPreview = modal.querySelector('.img-upload__preview img');
-  var effectsButton = modal.querySelectorAll('input[name="effect"]');
-
-  slider.classList.add('hidden');
+  var effectButtons = modal.querySelectorAll('input[name="effect"]');
 
   function changePreviewClass(id) {
     var formatedId = id.slice(7);
@@ -66,6 +64,12 @@
     }
   }
 
+  function resetEffects() {
+    slider.classList.add('hidden');
+    changePreviewClass('effect-none');
+    setDefaultSliderValue();
+  }
+
   function setEffectLevel() {
     var filterLevel = pin.offsetLeft / bar.offsetWidth;
     var effectInput = modal.querySelector('.effect-level__value');
@@ -91,7 +95,7 @@
     }
   }
 
-  pin.addEventListener('mousedown', function (evt) {
+  function onPinMousedown(evt) {
     evt.preventDefault();
 
     var startCoordX = evt.clientX;
@@ -121,11 +125,37 @@
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
-  });
+  }
 
-  effectsButton.forEach(function (item) {
-    item.addEventListener('click', function (evt) {
-      onPreviewEffectClick(evt.target.id);
+  function addEffectButtonsEventListener() {
+    effectButtons.forEach(function (item) {
+      item.addEventListener('click', function (evt) {
+        onPreviewEffectClick(evt.target.id);
+      });
     });
-  });
+  }
+
+  function removeEffectButtonsEventListener() {
+    effectButtons.forEach(function (item) {
+      item.removeEventListener('click', function (evt) {
+        onPreviewEffectClick(evt.target.id);
+      });
+    });
+  }
+
+  function addPinEventListener() {
+    pin.addEventListener('mousedown', onPinMousedown);
+  }
+
+  function removePinEventListener() {
+    pin.removeEventListener('mousedown', onPinMousedown);
+  }
+
+  window.effect = {
+    resetEffects: resetEffects,
+    addPinEventListener: addPinEventListener,
+    removePinEventListener: removePinEventListener,
+    addEffectsButtonEventListener: addEffectButtonsEventListener,
+    removeEffectButtonsEventListener: removeEffectButtonsEventListener,
+  };
 })();
