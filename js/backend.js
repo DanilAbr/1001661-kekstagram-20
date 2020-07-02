@@ -4,13 +4,7 @@
   var SUCCESS_CODE = 200;
 
   var GET_URL = 'https://javascript.pages.academy/kekstagram/data';
-
-  function createErrorMessage(errorMessage) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 10; padding: 100px; text-align: center; background: tomato; position: absolute; left: 0; right: 0; font-size: 30px';
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
-  }
+  var SEND_URL = 'https://javascript.pages.academy/kekstagram';
 
   function transferData(metod, url, onSuccess, renderFunction, onError, data) {
     var xhr = new XMLHttpRequest();
@@ -31,6 +25,6 @@
   window.backend = {
     transferData: transferData,
     GET_URL: GET_URL,
-    createErrorMessage: createErrorMessage,
+    SEND_URL: SEND_URL,
   };
 })();
