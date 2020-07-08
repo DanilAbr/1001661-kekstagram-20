@@ -6,6 +6,7 @@
   function onSuccess(data, renderFunction) {
     renderFunction(data);
     window.data.photos = data;
+    window.gallery.showFilters();
   }
 
   function loadData(renderFunction) {

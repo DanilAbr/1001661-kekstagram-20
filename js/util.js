@@ -55,6 +55,32 @@
     container.appendChild(fragment);
   }
 
+  function shuffleArray(array) {
+    var shuffledArray = array.slice();
+    for (var i = shuffledArray.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = shuffledArray[i];
+      shuffledArray[i] = shuffledArray[j];
+      shuffledArray[j] = t;
+    }
+    return shuffledArray;
+  }
+
+  function debounce(cb) {
+    var DEBOUNCE_INTERVAL = 500;
+    var lastTimeout = null;
+
+    return function () {
+      var parameters = arguments;
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(function () {
+        cb.apply(null, parameters);
+      }, DEBOUNCE_INTERVAL);
+    };
+  }
+
   window.util = {
     renderElements: renderElements,
     createElement: createElement,
@@ -62,5 +88,7 @@
     getRandomArrayItem: getRandomArrayItem,
     createNumbersArray: createNumbersArray,
     clearContainer: clearContainer,
+    shuffleArray: shuffleArray,
+    debounce: debounce,
   };
 })();
