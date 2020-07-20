@@ -1,10 +1,9 @@
 'use strict';
 
 (function () {
-  var SUCCESS_CODE = 200;
-
   var GET_URL = 'https://javascript.pages.academy/kekstagram/data';
   var SEND_URL = 'https://javascript.pages.academy/kekstagram';
+  var SUCCESS_CODE = 200;
 
   function transferData(metod, url, onSuccess, renderFunction, onError, data) {
     var xhr = new XMLHttpRequest();

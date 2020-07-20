@@ -22,7 +22,7 @@
         window.picture.createPhotoElement,
         picturesList
     );
-    window.picture.addPictureListners();
+    window.picture.addPictureListners(photos);
   }
 
   function showFilters() {
