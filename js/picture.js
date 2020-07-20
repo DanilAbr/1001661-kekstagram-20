@@ -17,7 +17,7 @@
     return photoElement;
   }
 
-  function addPictureListners() {
+  function addPictureListners(photos) {
     var previews = document.querySelectorAll('.picture');
     var buttonClose = bigPictureContainer.querySelector('.big-picture__cancel');
 
@@ -39,11 +39,15 @@
       document.addEventListener('keydown', onBigPictureEscPress);
     }
 
-    previews.forEach(function (item, i) {
-      item.addEventListener('click', function () {
-        window.preview.createBigPhoto(i);
-        showBigPicture();
-        buttonClose.addEventListener('click', onButtonCloseClick);
+    function showCurrentPhoto(index) {
+      window.preview.createBigPhoto(photos[index]);
+      showBigPicture();
+      buttonClose.addEventListener('click', onButtonCloseClick);
+    }
+
+    previews.forEach(function (preview, index) {
+      preview.addEventListener('click', function () {
+        showCurrentPhoto(index);
       });
     });
   }

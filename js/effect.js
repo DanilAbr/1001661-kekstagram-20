@@ -107,10 +107,11 @@
       startCoordX = moveEvt.clientX;
 
       pin.style.left = (pin.offsetLeft - shiftX) + 'px';
-      effectLine.style.width = pin.offsetLeft + 'px';
 
       if (pin.offsetLeft < 0 || pin.offsetLeft > bar.offsetWidth) {
         pin.style.left = (pin.offsetLeft + shiftX) + 'px';
+      } else {
+        effectLine.style.width = pin.offsetLeft + 'px';
       }
 
       setEffectLevel();
@@ -150,6 +151,46 @@
   function removePinEventListener() {
     pin.removeEventListener('mousedown', onPinMousedown);
   }
+
+  var buttonMin = document.querySelector('.scale__control--smaller');
+  var buttonMax = document.querySelector('.scale__control--bigger');
+  var sizeValue = document.querySelector('.scale__control--value');
+  var img = document.querySelector('.img-upload__preview img');
+  sizeValue.value = '100%';
+
+  function changeImgSize(percent) {
+    img.style.transform = 'scale(' + percent / 100 + ')';
+  }
+
+  function onButtonMinClick() {
+    var imgValue = sizeValue.value.slice(0, -1);
+    sizeValue.value = '';
+
+    if (imgValue > 25) {
+      imgValue -= 25;
+    }
+    sizeValue.value += imgValue + '%';
+    changeImgSize(imgValue);
+  }
+
+  function onButtonMaxClick() {
+    var imgValue = sizeValue.value.slice(0, -1);
+    sizeValue.value = '';
+
+    if (imgValue < 100) {
+      imgValue = +imgValue + 25;
+    }
+    sizeValue.value += imgValue + '%';
+    changeImgSize(imgValue);
+  }
+
+  buttonMax.addEventListener('click', function () {
+    onButtonMaxClick();
+  });
+
+  buttonMin.addEventListener('click', function () {
+    onButtonMinClick();
+  });
 
   window.effect = {
     resetEffects: resetEffects,
