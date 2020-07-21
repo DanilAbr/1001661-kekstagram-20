@@ -23,9 +23,11 @@
     buttonClose.addEventListener('click', onButtonCloseClick);
     document.addEventListener('keydown', onModalEscPress);
     window.effect.addPinEventListener();
-    window.effect.addEffectsButtonEventListener();
+    window.effect.addEffectButtonsEventListeners();
+    window.effect.addResizeButtonsEventListeners();
     addFormEventListeners();
     window.effect.resetEffects();
+    uploadUserPhoto();
   }
 
   function onButtonCloseClick() {
@@ -35,7 +37,8 @@
     document.removeEventListener('keydown', onModalEscPress);
     inputUpload.value = '';
     window.effect.removePinEventListener();
-    window.effect.removeEffectButtonsEventListener();
+    window.effect.removeEffectButtonsEventListeners();
+    window.effect.removeResizeButtonsEventListeners();
     form.reset();
   }
 
@@ -119,6 +122,27 @@
     });
 
     addOrRemoveEscListeners();
+  }
+
+  function uploadUserPhoto() {
+    var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+    var img = modal.querySelector('.img-upload__preview img');
+    var file = inputUpload.files[0];
+    var fileName = file.name.toLowerCase();
+
+    var matches = FILE_TYPES.some(function (it) {
+      return fileName.endsWith(it);
+    });
+
+    if (matches) {
+      var reader = new FileReader();
+
+      reader.addEventListener('load', function () {
+        img.src = reader.result;
+      });
+
+      reader.readAsDataURL(file);
+    }
   }
 
   inputUpload.addEventListener('change', function () {
